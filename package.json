@@ -2,16 +2,22 @@
   "name": "stablejack",
   "version": "0.1.0",
   "private": true,
-   "engines": {
+  "engines": {
     "node": ">=14.0.0",
     "yarn": ">=1.22.0",
     "npm": "please-use-yarn"
+  },
+  "resolutions": {
+    "strip-ansi": "6.0.0"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix --ext .js,.jsx .",
+    "prettier": "prettier --write .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "react": "^18",
@@ -19,6 +25,8 @@
     "next": "14.2.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^18.4.2",
+    "@commitlint/config-conventional": "^18.4.2",
     "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -27,10 +35,10 @@
     "@typescript-eslint/parser": "^7.14.1",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8.57.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.3",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
-    "eslint-config-next": "^14.2.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest-dom": "^5.4.0",
@@ -46,6 +54,7 @@
     "eslint-plugin-testing-library": "^6.2.2",
     "eslint-plugin-unused-imports": "^3.2.0",
     "eslint-plugin-vitest": "~0.4.1",
+    "husky": "^8.0.3",
     "prettier": "^3.3.2"
   }
 }
