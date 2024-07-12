@@ -1,0 +1,6 @@
+.yarn
+.next
+dist
+node_modules
+next.config.js
+README.md
