@@ -1,8 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { Montserrat } from 'next/font/google';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import type { Options } from 'react-to-pdf';
+import generatePDF, { Margin, Resolution } from 'react-to-pdf';
 import { z } from 'zod';
 
 import { useTradingStore } from '../../store';
@@ -10,6 +13,7 @@ import { Button } from '../components/lib/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/lib/form';
 import { Input } from '../components/lib/input';
 
+const montserrat = Montserrat({ subsets: ['latin'] });
 const FormSchema = z.object({
   avaxPrice: z.preprocess(
     (val) => Number(val),
@@ -372,6 +376,48 @@ export function TradingSimulation() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setData(data);
   }
+
+  const [showPdf, setShowPdf] = useState(false);
+  const options: Options = {
+    filename: 'trading-simulation.pdf',
+    // default is `save`
+    method: 'save',
+    // default is Resolution.MEDIUM = 3, which should be enough, higher values
+    // increases the image quality but also the size of the PDF, so be careful
+    // using values higher than 10 when having multiple pages generated, it
+    // might cause the page to crash or hang.
+    resolution: Resolution.HIGH,
+    page: {
+      // margin is in MM, default is Margin.NONE = 0
+      margin: Margin.SMALL,
+      // default is 'A4'
+      format: 'letter',
+      // default is 'portrait'
+      orientation: 'landscape',
+    },
+    canvas: {
+      mimeType: 'image/png',
+      qualityRatio: 1,
+    },
+    overrides: {
+      pdf: {
+        compress: true,
+      },
+      canvas: {
+        useCORS: true,
+      },
+    },
+  };
+  const openPDF = async () => {
+    setShowPdf(true);
+    try {
+      await generatePDF(() => document.getElementById('wrapper'), options);
+    } catch (error) {
+      console.error('PDF oluşturma sırasında bir hata oluştu:', error);
+    } finally {
+      setShowPdf(false);
+    }
+  };
   return (
     <section className="mb-20 mt-6">
       <Form {...form}>
@@ -661,9 +707,100 @@ export function TradingSimulation() {
               </FormItem>
             )}
           />
-          <Button className="bg-black dark:bg-white dark:text-black" type="submit">
-            Save Calculations
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button className="bg-black dark:bg-white dark:text-black" type="submit">
+              Save Calculations
+            </Button>
+            {!showPdf && (
+              <Button onClick={() => setShowPdf(true)} id="pdfclick" className="bg-black dark:bg-white dark:text-black">
+                Create PDF
+              </Button>
+            )}
+            {showPdf && (
+              <Button onClick={openPDF} id="pdfclick" className="bg-black dark:bg-white dark:text-black">
+                Download
+              </Button>
+            )}
+          </div>
+          {showPdf && (
+            <div id="wrapper" className="bg-white px-10 py-12 text-black">
+              <div>
+                <div className="mb-6 mr-10">
+                  <p
+                    className={`overflow-hidden text-xl font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
+                    Stable
+                  </p>
+                  <p
+                    className={`overflow-hidden text-xl font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
+                    Jack
+                  </p>
+                </div>
+              </div>
+              <div className="flex w-full items-center">
+                <h2 className="mb-5 text-3xl font-bold">Trading Simulation</h2>
+              </div>
+              <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <thead>
+                  <tr>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Field</th>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Amount of AVAX Deposited by the User</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      {form.watch('amountOfAVAXDepositedbytheUser')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>xAVAX Minted</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('xAVAXMinted')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      Value of the xAVAX Position of the User
+                    </td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      {form.watch('valueOfthexAVAXPositionoftheUser')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Change in AVAX Price</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('changeinAVAXPrice')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>New xAVAX Price</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('newxAVAXPrice')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      New Value of the xAVAX Position of the User
+                    </td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      {form.watch('newValueofthexAVAXPositionoftheUser')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Amount of AVAX User Have</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('amountOfAVAXUserHave')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Increase/Decrease in Dollar Value</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      {form.watch('increaseDecreaseinDollarValue')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Increase/Decrease in AVAX Value</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      {form.watch('increaseDecreaseinAvaxValue')}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
         </form>
       </Form>
     </section>
