@@ -1,11 +1,18 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import { ProtocolSimulation } from '../containers/protocolSimulation';
-import { TradingSimulation } from '../containers/tradingSimulation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './lib/tabs';
 
+export const ProtocolSimulation = dynamic(
+  () => import('../containers/protocolSimulation').then((mod) => mod.ProtocolSimulation),
+  { ssr: false },
+);
+export const TradingSimulation = dynamic(
+  () => import('../containers/tradingSimulation').then((mod) => mod.TradingSimulation),
+  { ssr: false },
+);
 export function TabsDemo() {
   const router = useRouter();
   let selectedTab = 'protocol-simulation';
