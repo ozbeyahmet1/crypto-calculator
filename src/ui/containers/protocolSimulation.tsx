@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useStore } from '../../store';
 import { Button } from '../components/lib/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/lib/form';
 import { Input } from '../components/lib/input';
@@ -106,6 +107,7 @@ const FormSchema = z.object({
 });
 
 export function ProtocolSimulation() {
+  const finalDatas = useStore((state) => state.data);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -121,6 +123,7 @@ export function ProtocolSimulation() {
       leverage: 3.86,
       collateralizationRatio: 135,
     },
+    values: finalDatas,
   });
   const avaxPrice = useWatch({ control: form.control, name: 'avaxPrice' });
   const depositedAvax = useWatch({ control: form.control, name: 'depositedAvax' });
@@ -180,9 +183,10 @@ export function ProtocolSimulation() {
   useEffect(() => {
     form.setValue('collateralizationRatio', totalValOfAvax / aUSDinCirculation);
   }, [totalValOfAvax, aUSDinCirculation, form]);
+  const assigne = useStore((state) => state.assign);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    alert(JSON.stringify(data, null, 2));
+    assigne(data);
   }
 
   return (
