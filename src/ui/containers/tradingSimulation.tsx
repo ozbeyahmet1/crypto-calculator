@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useTradingStore } from '../../store';
 import { Button } from '../components/lib/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/lib/form';
 import { Input } from '../components/lib/input';
@@ -205,6 +206,7 @@ const FormSchema = z.object({
 });
 
 export function TradingSimulation() {
+  const finalDatas = useTradingStore((state) => state.data);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -229,6 +231,7 @@ export function TradingSimulation() {
       increaseDecreaseinDollarValue: 38.57,
       increaseDecreaseinAvaxValue: 25.97,
     },
+    values: finalDatas,
   });
   const avaxPrice = useWatch({ control: form.control, name: 'avaxPrice' });
   const depositedAvax = useWatch({ control: form.control, name: 'depositedAvax' });
@@ -364,10 +367,11 @@ export function TradingSimulation() {
     form.setValue('increaseDecreaseinAvaxValue', increaseDecreaseinAvaxValue * 100);
   }, [form, amountOfAVAXUserHave, amountOfAVAXDepositedbytheUser]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    alert(JSON.stringify(data, null, 2));
-  }
+  const setData = useTradingStore((state) => state.assign);
 
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    setData(data);
+  }
   return (
     <section className="mb-20 mt-6">
       <Form {...form}>
@@ -658,7 +662,7 @@ export function TradingSimulation() {
             )}
           />
           <Button className="bg-black dark:bg-white dark:text-black" type="submit">
-            Create Report
+            Save Calculations
           </Button>
         </form>
       </Form>
