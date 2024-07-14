@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Montserrat } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import type { Options } from 'react-to-pdf';
@@ -108,7 +107,7 @@ const FormSchema = z.object({
       .min(0, { message: 'Value must be at least 1' }),
   ),
 });
-const montserrat = Montserrat({ subsets: ['latin'] });
+
 export function ProtocolSimulation() {
   const finalDatas = useStore((state) => state.data);
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -205,21 +204,9 @@ export function ProtocolSimulation() {
       // margin is in MM, default is Margin.NONE = 0
       margin: Margin.SMALL,
       // default is 'A4'
-      format: 'letter',
+      format: 'A4',
       // default is 'portrait'
-      orientation: 'landscape',
-    },
-    canvas: {
-      mimeType: 'image/png',
-      qualityRatio: 1,
-    },
-    overrides: {
-      pdf: {
-        compress: true,
-      },
-      canvas: {
-        useCORS: true,
-      },
+      orientation: 'portrait',
     },
   };
   const openPDF = async () => {
@@ -413,19 +400,7 @@ export function ProtocolSimulation() {
             )}
           </div>
           {showPdf && (
-            <div id="wrapper" className="bg-white px-10 py-12 text-black">
-              <div>
-                <div className="mb-6 mr-10">
-                  <p
-                    className={`overflow-hidden text-xl font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
-                    Stable
-                  </p>
-                  <p
-                    className={`overflow-hidden text-xl font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
-                    Jack
-                  </p>
-                </div>
-              </div>
+            <div id="wrapper" className="bg-white px-2 py-3 text-black lg:px-10 lg:py-12">
               <div className="flex w-full items-center">
                 <h2 className="mb-5 text-3xl font-bold">Protocol Simulation</h2>
               </div>

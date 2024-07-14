@@ -20,14 +20,16 @@ export default function Navbar() {
         </div>
       </div>
       <div className="container flex items-center justify-between py-2 lg:justify-normal lg:py-0">
-        <div className="mr-10">
-          <p className={`text-md overflow-hidden font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
-            Stable
-          </p>
-          <p className={`text-md overflow-hidden font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
-            Jack
-          </p>
-        </div>
+        <a href="/">
+          <div className="mr-10">
+            <p className={`text-md overflow-hidden font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
+              Stable
+            </p>
+            <p className={`text-md overflow-hidden font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
+              Jack
+            </p>
+          </div>
+        </a>
         <div className="flex lg:hidden">
           <HamburgerMenu>
             <MdOutlineMenu size={36} />
