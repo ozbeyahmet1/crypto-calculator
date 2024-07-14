@@ -1,8 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { Montserrat } from 'next/font/google';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import type { Options } from 'react-to-pdf';
+import generatePDF, { Margin, Resolution } from 'react-to-pdf';
 import { z } from 'zod';
 
 import { useStore } from '../../store';
@@ -105,7 +108,7 @@ const FormSchema = z.object({
       .min(0, { message: 'Value must be at least 1' }),
   ),
 });
-
+const montserrat = Montserrat({ subsets: ['latin'] });
 export function ProtocolSimulation() {
   const finalDatas = useStore((state) => state.data);
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -183,11 +186,52 @@ export function ProtocolSimulation() {
   useEffect(() => {
     form.setValue('collateralizationRatio', totalValOfAvax / aUSDinCirculation);
   }, [totalValOfAvax, aUSDinCirculation, form]);
-  const assigne = useStore((state) => state.assign);
+  const setData = useStore((state) => state.assign);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    assigne(data);
+    setData(data);
   }
+  const [showPdf, setShowPdf] = useState(false);
+  const options: Options = {
+    filename: 'protocol-simulation.pdf',
+    // default is `save`
+    method: 'save',
+    // default is Resolution.MEDIUM = 3, which should be enough, higher values
+    // increases the image quality but also the size of the PDF, so be careful
+    // using values higher than 10 when having multiple pages generated, it
+    // might cause the page to crash or hang.
+    resolution: Resolution.HIGH,
+    page: {
+      // margin is in MM, default is Margin.NONE = 0
+      margin: Margin.SMALL,
+      // default is 'A4'
+      format: 'letter',
+      // default is 'portrait'
+      orientation: 'landscape',
+    },
+    canvas: {
+      mimeType: 'image/png',
+      qualityRatio: 1,
+    },
+    overrides: {
+      pdf: {
+        compress: true,
+      },
+      canvas: {
+        useCORS: true,
+      },
+    },
+  };
+  const openPDF = async () => {
+    setShowPdf(true);
+    try {
+      await generatePDF(() => document.getElementById('wrapper'), options);
+    } catch (error) {
+      console.error('PDF oluşturma sırasında bir hata oluştu:', error);
+    } finally {
+      setShowPdf(false);
+    }
+  };
 
   return (
     <section className="mb-20 mt-6">
@@ -353,9 +397,100 @@ export function ProtocolSimulation() {
               </FormItem>
             )}
           />
-          <Button className="bg-black dark:bg-white dark:text-black" type="submit">
-            Create Report
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button className="bg-black dark:bg-white dark:text-black" type="submit">
+              Save Calculations
+            </Button>
+            {!showPdf && (
+              <Button onClick={() => setShowPdf(true)} id="pdfclick" className="bg-black dark:bg-white dark:text-black">
+                Create PDF
+              </Button>
+            )}
+            {showPdf && (
+              <Button onClick={openPDF} id="pdfclick" className="bg-black dark:bg-white dark:text-black">
+                Download
+              </Button>
+            )}
+          </div>
+          {showPdf && (
+            <div id="wrapper" className="bg-white px-10 py-12 text-black">
+              <div>
+                <div className="mb-6 mr-10">
+                  <p
+                    className={`overflow-hidden text-xl font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
+                    Stable
+                  </p>
+                  <p
+                    className={`overflow-hidden text-xl font-semibold leading-[0.95] text-red-700 ${montserrat.className}`}>
+                    Jack
+                  </p>
+                </div>
+              </div>
+              <div className="flex w-full items-center">
+                <h2 className="mb-5 text-3xl font-bold">Protocol Simulation</h2>
+              </div>
+              <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <thead>
+                  <tr>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Field</th>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Avax Price($)</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('avaxPrice')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      Amount of AVAX Deposited into the Protocol
+                    </td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('depositedAvax')} AVAX</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      Total Value of AVAX Collateral of the Protocol($)
+                    </td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('totalValOfAvax')} $</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>aUSD Market Cap($)</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('aUSDmarketCap')} $</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Amount of aUSD in circulation($)</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('aUSDinCirculation')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>aUSD Price($)</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('aUSDPrice')} $</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>xAVAX Market Cap($)</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('xAVAXMarketCap')} $</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Number of xAVAX in circulation</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('xAVAXinCirculation')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>xAVAX Price($)</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('xAVAXPrice')} $</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Leverage</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>{form.watch('leverage')}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>Collateralization Ratio</td>
+                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                      {form.watch('collateralizationRatio')}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
         </form>
       </Form>
     </section>
