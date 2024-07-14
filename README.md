@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Crypto Calculator
 
-## Getting Started
+## Project Description
 
-First, run the development server:
+This project is a web application that allows users to use a crypto currency calculator.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies Used
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js**: React-based web framework.
+- **TypeScript**: Provides type safety and enhanced editor support.
+- **Wagmi**: Provides additional functionality for specific operations.
+- **Tailwind CSS**: A utility-first CSS framework for rapid and customizable styling.
+- **Zod**: TypeScript-first schema validation library providing type safety.
+- **Zustand**: Simple and scalable state management for React applications.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Dynamic Data Assignment**: Dynamically assigns calculations based on user-input data.
 
-## Learn More
+- **Dark / Light Theme Options**: Enhances accessibility by providing dark and light theme options.
 
-To learn more about Next.js, take a look at the following resources:
+- **PDF Export of Calculation Results**: Allows users to export calculation results as PDF for a better user experience.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **State Persistence with Zustand**: Uses Zustand to persist application state in the URL, preventing data loss.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## How to Start the Project
 
-## Deploy on Vercel
+1. Download or clone the project.
+2. Create a `.env` file and enter the following value:
+   ```
+   NEXT_PUBLIC_PROJECT_ID =
+   ```
+3. Open your terminal in the project directory and run the following commands:
+   ```
+   npm install
+   npm run dev
+   ```
+4. Visit `http://localhost:3000` in your browser to view the application.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The project adopts an architectural approach focused on shared components due to its relatively small scale. While component reusability is not a primary concern, an atomic design approach has not been adopted.
