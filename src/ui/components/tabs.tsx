@@ -1,4 +1,5 @@
 import { ProtocolSimulation } from '../containers/protocolSimulation';
+import { TradingSimulation } from '../containers/tradingSimulation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './lib/tabs';
 
 export function TabsDemo() {
@@ -19,8 +20,8 @@ export function TabsDemo() {
       <TabsContent value="account" className="mt-10 w-full">
         <ProtocolSimulation />
       </TabsContent>
-      <TabsContent value="password">
-        <div>PssWord</div>
+      <TabsContent value="password" className="mt-10 w-full">
+        <TradingSimulation />
       </TabsContent>
     </Tabs>
   );
