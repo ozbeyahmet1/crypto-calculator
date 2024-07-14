@@ -72,14 +72,13 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
 }
 
-*,
-*:before,
-*:after {
+html {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  position: relative;
+  font-size: 16px;
+  overflow: hidden;
+  overflow-y: auto;
+  scroll-behavior: auto !important;
 }

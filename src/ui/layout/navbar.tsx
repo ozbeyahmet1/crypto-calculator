@@ -4,6 +4,7 @@ import { MdOutlineMenu } from 'react-icons/md';
 import ConnectWallet from '@/ui/components/connectWallet';
 
 import { ThemeSwitcher } from '../components/themeSwitcher';
+import { HamburgerMenu } from './hamburgerMenu';
 
 /**
  * Represents the navigation bar component.
@@ -28,7 +29,9 @@ export default function Navbar() {
           </p>
         </div>
         <div className="flex lg:hidden">
-          <MdOutlineMenu size={30} />
+          <HamburgerMenu>
+            <MdOutlineMenu size={36} />
+          </HamburgerMenu>
         </div>
         <div className="hidden w-2/3 items-center justify-end lg:flex lg:w-5/6 lg:justify-between">
           <div className="flex items-center gap-3 ">
@@ -37,6 +40,9 @@ export default function Navbar() {
             </span>
             <p className="hidden overflow-hidden bg-transparent text-xs font-normal hover:bg-transparent lg:flex">
               REPORTS
+            </p>
+            <p className="hidden overflow-hidden bg-transparent text-xs font-normal hover:bg-transparent lg:flex">
+              SAVED CALCULATIONS
             </p>
           </div>
           <div className="hidden items-center lg:flex">
