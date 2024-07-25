@@ -20,7 +20,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Avax Price must be a number',
       })
-      .min(0.01, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   depositedAvax: z.preprocess(
     (val) => Number(val),
@@ -29,7 +29,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Amount of AVAX Deposited into the Protocol must be a number',
       })
-      .min(1, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   totalValOfAvax: z.preprocess(
     (val) => Number(val),
@@ -61,7 +61,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Avax Price must be a number',
       })
-      .min(1, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   xAVAXMarketCap: z.preprocess(
     (val) => Number(val),
@@ -70,7 +70,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Avax Price must be a number',
       })
-      .min(1, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   xAVAXinCirculation: z.preprocess(
     (val) => Number(val),
@@ -79,7 +79,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Avax Price must be a number',
       })
-      .min(1, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   xAVAXPrice: z.preprocess(
     (val) => Number(val),
@@ -88,7 +88,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Avax Price must be a number',
       })
-      .min(1, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   leverage: z.preprocess(
     (val) => Number(val),
@@ -97,7 +97,7 @@ const FormSchema = z.object({
         required_error: 'required field',
         invalid_type_error: 'Avax Price must be a number',
       })
-      .min(1, { message: 'Value must be at least 1' }),
+      .min(0.00001, { message: 'Value must be at least 1' }),
   ),
   collateralizationRatio: z.preprocess(
     (val) => Number(val),
