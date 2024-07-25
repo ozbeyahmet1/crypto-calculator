@@ -15,10 +15,12 @@ import { Input } from '../components/lib/input';
 const FormSchema = z.object({
   avaxPrice: z.preprocess(
     (val) => Number(val),
-    z.number({
-      required_error: 'required field',
-      invalid_type_error: 'Avax Price must be a number',
-    }),
+    z
+      .number({
+        required_error: 'required field',
+        invalid_type_error: 'Avax Price must be a number',
+      })
+      .min(0.01, { message: 'Value must be at least 1' }),
   ),
   depositedAvax: z.preprocess(
     (val) => Number(val),
@@ -416,13 +418,7 @@ export function TradingSimulation() {
               <FormItem>
                 <FormLabel>Avax Price($)</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Avax Price"
-                    {...field}
-                    type="number"
-                    disabled
-                    className="bg-gray-200 dark:bg-gray-600"
-                  />
+                  <Input placeholder="Avax Price" {...field} type="number" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
